@@ -1,0 +1,10 @@
+{
+    "id": "com.flopinou.francepack",
+    "name": "France Pack",
+    "description": "A modpack containing Paris and Lyon.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Flopinou"
+    },
+    "main": "index.js"
+}

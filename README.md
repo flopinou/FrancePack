@@ -1,0 +1,41 @@
+# France Pack for Subway Builder
+
+[🇬🇧 English](#-english) | [🇫🇷 Français](#-français)
+
+## 🇬🇧 English
+
+Subway Builder modpack that adds Lyon and Paris to the game.
+
+### Installation Instructions:
+
+- In Subway Builder, go to Settings > Mod Manager and click on "Open Mods Folder".
+- Unzip (extract) the archive into the folder that opened.
+    - *Note: The ZIP file contains the files directly (without a root folder), so make sure you extract them into a folder named `FrancePack` inside your `mods` folder (often done by default by extraction software).*
+- Run `run_windows.bat` or `run_mac-linux.sh` (depending on your OS):
+    - **On Windows:** Simply double-click on `run_windows.bat`.
+    - **On macOS and Linux:** Open a Terminal, type `sh ` (with a space), drag and drop the `run_mac-linux.sh` file into the terminal window, and press Enter.
+- Enable the mod inside Subway Builder, then restart the game.
+- Press **Ctrl + Shift + R** (Cmd + Option + R on Mac) on the main menu to load the mods.
+- Click on New Game: you will find the map in the **France** (or **Modded**) tab.
+
+> **:warning: Important:** You must run the script (`.bat` or `.sh`) every time you want to play the Paris or Lyon map **before** launching the game (feel free to create a desktop shortcut for easier access!). Make sure the terminal window remains open in the background. You also need to press **Ctrl + Shift + R** on the main menu every time you launch the game.
+
+---
+
+## 🇫🇷 Français
+
+Un modpack pour Subway Builder qui rajoute Lyon et Paris au jeu.
+
+### Instructions d'installation :
+
+- Dans Subway Builder, allez dans Paramètres > Mod Manager et cliquez sur "Open Mods Folder".
+- Décompressez le fichier ZIP dans le dossier `mods` qui vient de s'ouvrir.
+    - *Note : Comme le fichier ZIP contient directement les fichiers (sans dossier racine), assurez-vous de bien les extraire dans un dossier nommé `FrancePack` à l'intérieur de `mods` (souvent fait par défaut par les logiciels d'extraction).*
+- Lancez `run_windows.bat` ou `run_mac-linux.sh` (selon votre système) :
+    - **Sur Windows :** Double-cliquez simplement sur `run_windows.bat`.
+    - **Sur macOS et Linux :** Ouvrez un Terminal, écrivez `sh ` (avec un espace), glissez-déposez le fichier `run_mac-linux.sh` dans la fenêtre du terminal, puis appuyez sur Entrée.
+- Activez le mod dans le jeu, puis redémarrez Subway Builder.
+- Sur le menu principal, faites **Ctrl + Shift + R** (Cmd + Option + R sur Mac) pour charger les mods.
+- Cliquez sur Nouvelle partie : la carte se trouve dans l'onglet **France** (ou **Modded**).
+
+> **:warning: Important :** Vous devez lancer le script (`.bat` ou `.sh`) avant chaque session de jeu pour jouer sur la carte de Paris ou Lyon (n'hésitez pas à créer un raccourci du script sur votre bureau !). Assurez-vous que la fenêtre du terminal reste bien ouverte en arrière-plan. Vous devez également refaire la combinaison **Ctrl + Shift + R** sur le menu principal à chaque lancement du jeu.
