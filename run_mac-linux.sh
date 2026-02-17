@@ -1,22 +1,26 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-TARGET_PAR="$SCRIPT_DIR/../../cities/data/PAR"
-TARGET_LYS="$SCRIPT_DIR/../../cities/data/LYS"
 VERSION="1.30.0"
 
-# Copy data files for Paris
-echo "[FrancePack] Copying data files for Paris (PAR)..."
-mkdir -p "$TARGET_PAR"
-cp -f "$SCRIPT_DIR/data/PAR/"* "$TARGET_PAR/"
+CITIES=("PAR" "LYS" "MRS" "LIL" "TLS" "RNS")
 
-# Copy data files for Lyon
-echo "[FrancePack] Copying data files for Lyon (LYS)..."
-mkdir -p "$TARGET_LYS"
-cp -f "$SCRIPT_DIR/data/LYS/"* "$TARGET_LYS/"
+# Copy city data files
+for CODE in "${CITIES[@]}"; do
+    TARGET="$SCRIPT_DIR/../../cities/data/$CODE"
+    SOURCE="$SCRIPT_DIR/data/$CODE"
+    
+    if [ -d "$SOURCE" ]; then
+        echo "[FrancePack] Copying data files for $CODE..."
+        mkdir -p "$TARGET"
+        cp -f "$SOURCE/"* "$TARGET/"
+    else
+        echo "[FrancePack] Warning: Source directory for $CODE not found."
+    fi
+done
 
 echo "[FrancePack] All data files copied successfully."
 
-# Check pmtiles binary
+# Check for pmtiles binary and download if missing
 if [ ! -f "$SCRIPT_DIR/pmtiles" ]; then
     echo "[FrancePack] 'pmtiles' binary not found. Downloading..."
     OS=$(uname -s)
@@ -28,10 +32,7 @@ if [ ! -f "$SCRIPT_DIR/pmtiles" ]; then
         else
             URL="https://github.com/protomaps/go-pmtiles/releases/download/v${VERSION}/go-pmtiles-${VERSION}_Darwin_x86_64.zip"
         fi
-        echo "Downloading from $URL..."
-        curl -L -f -o "$SCRIPT_DIR/pmtiles.zip" "$URL"
-        unzip -j -o "$SCRIPT_DIR/pmtiles.zip" "pmtiles" -d "$SCRIPT_DIR"
-        rm "$SCRIPT_DIR/pmtiles.zip"
+        EXTENSION="zip"
         
     elif [ "$OS" = "Linux" ]; then
         if [ "$ARCH" = "aarch64" ]; then
@@ -39,7 +40,16 @@ if [ ! -f "$SCRIPT_DIR/pmtiles" ]; then
         else
              URL="https://github.com/protomaps/go-pmtiles/releases/download/v${VERSION}/go-pmtiles_${VERSION}_Linux_x86_64.tar.gz"
         fi
-        echo "Downloading from $URL..."
+        EXTENSION="tar.gz"
+    fi
+    
+    echo "Downloading from $URL..."
+    
+    if [ "$EXTENSION" = "zip" ]; then
+        curl -L -f -o "$SCRIPT_DIR/pmtiles.zip" "$URL"
+        unzip -j -o "$SCRIPT_DIR/pmtiles.zip" "pmtiles" -d "$SCRIPT_DIR"
+        rm "$SCRIPT_DIR/pmtiles.zip"
+    else
         curl -L -o "$SCRIPT_DIR/pmtiles.tar.gz" "$URL"
         tar -xzf "$SCRIPT_DIR/pmtiles.tar.gz" -C "$SCRIPT_DIR" pmtiles
         rm "$SCRIPT_DIR/pmtiles.tar.gz"
@@ -56,4 +66,5 @@ fi
 
 # Start tile server
 echo "[FrancePack] Starting tile server on port 8080..."
+echo "[FrancePack] Keep this window open while playing!"
 "$SCRIPT_DIR/pmtiles" serve "$SCRIPT_DIR" --port 8080 --cors=*

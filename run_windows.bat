@@ -1,83 +1,92 @@
 @echo off
-cd /d "%~dp0"
+setlocal enabledelayedexpansion
 
-REM Copy data files to cities\data\PAR
-set "TARGET_PAR=%~dp0..\..\cities\data\PAR"
-echo [FrancePack] Copying Paris data files...
-if not exist "%TARGET_PAR%" mkdir "%TARGET_PAR%"
-xcopy /E /Y "%~dp0data\PAR\*" "%TARGET_PAR%\" >nul
+set "SCRIPT_DIR=%~dp0"
+set "VERSION=1.30.0"
+set "CITIES=PAR LYS MRS LIL TLS RNS"
+set "URL=https://github.com/protomaps/go-pmtiles/releases/download/v%VERSION%/go-pmtiles_%VERSION%_Windows_x86_64.zip"
 
-REM Copy data files to cities\data\LYS
-set "TARGET_LYS=%~dp0..\..\cities\data\LYS"
-echo [FrancePack] Copying Lyon data files...
-if not exist "%TARGET_LYS%" mkdir "%TARGET_LYS%"
-xcopy /E /Y "%~dp0data\LYS\*" "%TARGET_LYS%\" >nul
+:: Copy city data files
+for %%C in (%CITIES%) do (
+    set "SOURCE=%SCRIPT_DIR%data\%%C"
+    set "TARGET=%SCRIPT_DIR%..\..\cities\data\%%C"
+    
+    if exist "!SOURCE!" (
+        echo [FrancePack] Copying data files for %%C...
+        if not exist "!TARGET!" mkdir "!TARGET!"
+        copy /Y "!SOURCE!\*" "!TARGET!\" >nul
+    ) else (
+        echo [FrancePack] Warning: Source folder for %%C not found.
+    )
+)
 
-echo [FrancePack] Data files copied successfully.
+echo [FrancePack] All data files copied successfully.
 
-REM Check pmtiles.exe
-if exist "pmtiles.exe" goto :START_SERVER
+:: Check for pmtiles binary and download if missing
 
-echo [FrancePack] 'pmtiles.exe' not found. Checking for download tools...
+if exist "%SCRIPT_DIR%pmtiles.exe" (
+    echo [FrancePack] pmtiles.exe already exists.
+    goto :start_server
+)
+
+echo [FrancePack] 'pmtiles.exe' not found.
+
 set "DOWNLOAD_SUCCESS=0"
 
-REM Use CURL if available 
+:: Try curl and tar
 where curl >nul 2>nul
-if %errorlevel% equ 0 (
-    echo [FrancePack] Found curl. Attempting download...
-    curl -L -f -o pmtiles.zip "https://github.com/protomaps/go-pmtiles/releases/download/v1.30.0/go-pmtiles_1.30.0_Windows_x86_64.zip"
-    if not errorlevel 1 set "DOWNLOAD_SUCCESS=1"
-)
-
-REM Fallback to PowerShell 
-if "%DOWNLOAD_SUCCESS%"=="0" (
-    echo [FrancePack] Curl missing or failed. Using PowerShell...
-    powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/protomaps/go-pmtiles/releases/download/v1.30.0/go-pmtiles_1.30.0_Windows_x86_64.zip' -OutFile 'pmtiles.zip'"
-)
-
-if not exist "pmtiles.zip" (
-    echo [FrancePack] Error: Download failed with both curl and PowerShell.
-    echo Please manually download: https://github.com/protomaps/go-pmtiles/releases/download/v1.30.0/go-pmtiles_1.30.0_Windows_x86_64.zip
-    pause
-    exit /b 1
-)
-
-REM Extracting
-echo [FrancePack] Extracting pmtiles.exe...
-set "EXTRACT_SUCCESS=0"
-
-where tar >nul 2>nul
-if %errorlevel% equ 0 (
-    REM Use TAR if available 
-    tar -xf pmtiles.zip pmtiles.exe
-    if not errorlevel 1 set "EXTRACT_SUCCESS=1"
-)
-
-if "%EXTRACT_SUCCESS%"=="0" (
-    REM Fallback to PowerShell
-    echo [FrancePack] 'tar' not found or failed. Trying PowerShell...
-    if exist "temp_pmtiles" rmdir /s /q "temp_pmtiles"
-    powershell -Command "Expand-Archive -Path 'pmtiles.zip' -DestinationPath 'temp_pmtiles' -Force"
-    
-    if exist "temp_pmtiles\pmtiles.exe" (
-        copy /Y "temp_pmtiles\pmtiles.exe" . >nul
+if !errorlevel! equ 0 (
+    where tar >nul 2>nul
+    if !errorlevel! equ 0 (
+        echo [FrancePack] Method 1: Attempting download via Curl and Tar...
+        
+        curl -L -f -o "%SCRIPT_DIR%pmtiles.zip" "!URL!"
+        
+        if exist "%SCRIPT_DIR%pmtiles.zip" (
+            echo [FrancePack] Extracting via Tar...
+            tar -xf "%SCRIPT_DIR%pmtiles.zip" -C "%SCRIPT_DIR%"
+            
+            if exist "%SCRIPT_DIR%pmtiles.exe" (
+                set "DOWNLOAD_SUCCESS=1"
+                del "%SCRIPT_DIR%pmtiles.zip"
+                echo [FrancePack] Download and extraction successful via Curl/Tar.
+            )
+        )
     )
-    if exist "temp_pmtiles" rmdir /s /q "temp_pmtiles"
 )
 
-REM Clean up zip
-if exist "pmtiles.zip" del "pmtiles.zip"
+:: Powershell fallback
+if "!DOWNLOAD_SUCCESS!"=="0" (
+    echo [FrancePack] Method 1 failed or tools missing. Falling back to PowerShell...
+    
+    if exist "%SCRIPT_DIR%pmtiles.zip" del "%SCRIPT_DIR%pmtiles.zip"
 
-REM Verify extraction
-if not exist "pmtiles.exe" (
-    echo [FrancePack] Error: Extraction failed or pmtiles.exe not found.
+    echo [FrancePack] Downloading via PowerShell...
+    powershell -Command "Invoke-WebRequest -Uri '!URL!' -OutFile '%SCRIPT_DIR%pmtiles.zip'"
+    
+    if exist "%SCRIPT_DIR%pmtiles.zip" (
+        echo [FrancePack] Extracting via PowerShell...
+        powershell -Command "Expand-Archive -Path '%SCRIPT_DIR%pmtiles.zip' -DestinationPath '%SCRIPT_DIR%' -Force"
+        del "%SCRIPT_DIR%pmtiles.zip"
+        
+        if exist "%SCRIPT_DIR%pmtiles.exe" (
+            set "DOWNLOAD_SUCCESS=1"
+            echo [FrancePack] Download and extraction successful via PowerShell.
+        )
+    )
+)
+
+if not exist "%SCRIPT_DIR%pmtiles.exe" (
+    echo [FrancePack] Error: Failed to download pmtiles.exe using both methods.
+    echo [FrancePack] Please download it manually from: !URL!
     pause
     exit /b 1
 )
 
-echo [FrancePack] pmtiles.exe installed successfully.
-
-:START_SERVER
-REM Start tile server
+:: Start tile server
+:start_server
 echo [FrancePack] Starting tile server on port 8080...
-pmtiles.exe serve . --port 8080 --cors=*
+echo [FrancePack] Keep this window open while playing!
+"%SCRIPT_DIR%pmtiles.exe" serve "%SCRIPT_DIR%." --port 8080 --cors=*
+
+pause

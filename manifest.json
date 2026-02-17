@@ -1,8 +1,8 @@
 {
     "id": "com.flopinou.francepack",
     "name": "France Pack",
-    "description": "A modpack containing Paris and Lyon.",
-    "version": "1.0.0",
+    "description": "A modpack that adds several French cities (Paris, Lyon, Marseille, Lille, Toulouse, Rennes).",
+    "version": "1.1.1",
     "author": {
         "name": "Flopinou"
     },
