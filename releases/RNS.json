@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.2.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.2.0/Rennes_MM.zip",
+      "sha256": "2eca69b9ab783803da7238d70bc79ee8d525304ba19fa011e31f0c79b28926b3"
+    }
+  ]
+}
