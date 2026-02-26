@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.2.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.2.0/Paris_MM.zip",
+      "sha256": "4863fbfc736652ff8eb3c6e86f23af138751a0195496a4cd3551707fc9fda5d2"
+    }
+  ]
+}

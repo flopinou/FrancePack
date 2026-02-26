@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.2.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.2.0/Lille_MM.zip",
+      "sha256": "e13a4190e78bd44e5dabd05f94c5693c08def09a7ab3ff9fb2503260ff1c9b90"
+    }
+  ]
+}

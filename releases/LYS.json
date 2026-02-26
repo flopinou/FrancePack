@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.2.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.2.0/Lyon_MM.zip",
+      "sha256": "94147863f8275f327f8eecec4fd7204d312a5cf5fe16262078546f080436ab54"
+    }
+  ]
+}

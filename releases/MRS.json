@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "version": "1.2.0",
+      "game_version": ">=1.0.0",
+      "date": "2026-02-24",
+      "changelog": "Realistic demand data using official French government data (INSEE, SIRENE, SNCF).",
+      "download": "https://github.com/flopinou/FrancePack/releases/download/1.2.0/Marseille_MM.zip",
+      "sha256": "272fafacbded8a93812f0e3eee797d77c014b22d6574909b2a89d21c34268c37"
+    }
+  ]
+}
